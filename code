@@ -18,23 +18,36 @@ maxHeight = max(int(height_AB), int(height_CD))
 
 input_pts = np.float32([pt_A, pt_D, pt_C, pt_B])
 output_pts = np.array([
-    [15, 15],
-    [maxWidth - 340, 10],
-    [maxWidth - 240, maxHeight - 10],
-    [10, maxHeight - 100]], dtype = "float32")
+     [15, 15],
+     [maxWidth - 340, 10],
+     [maxWidth - 240, maxHeight - 10],
+     [10, maxHeight - 100]], dtype = "float32")
 M = cv2.getPerspectiveTransform(input_pts,output_pts)
 out = cv2.warpPerspective(img,M,(maxWidth, maxHeight))
 gray = cv2.cvtColor(out, cv2.COLOR_BGR2GRAY)
 gray_blurred = cv2.blur(gray, (9, 10))
 
 detected_circles = cv2.HoughCircles(gray_blurred,
-               cv2.HOUGH_GRADIENT, 1, 20, param1 = 100,
-           param2 = 30, minRadius = 100, maxRadius = 120)
+                cv2.HOUGH_GRADIENT, 1, 20, param1 = 100,
+            param2 = 30, minRadius = 100, maxRadius = 120)
 if detected_circles is not None:
-detected_circles = np.uint16(np.around(detected_circles))
-for pt in detected_circles[0, :]:
-    a, b, r = pt[0], pt[1], pt[2]
-    cv2.circle(out, (a, b), r, (0, 255, 0), 2)
-    cv2.circle(out, (a, b), 1, (0, 0, 255), 3)
-cv2.imshow("yo", out)
+ detected_circles = np.uint16(np.around(detected_circles))
+ for pt in detected_circles[0, :]:
+     a, b, r = pt[0], pt[1], pt[2]
+     cv2.circle(out, (a, b), r, (0, 255, 0), 2)
+
+inverseoutput = np.linalg.pinv(output_pts)
+pt1 = [1,802]
+pt2 = [1202, 802]
+pt3 = [1202, 1]
+pt4 = [0,0]
+final_pts = np.float32([pt4, pt3, pt2, pt1])
+inverseinput = np.linalg.pinv(input_pts)
+X = cv2.getPerspectiveTransform(output_pts,input_pts)
+almostdone = cv2.warpPerspective(out,X, (1203, 802))
+Z = cv2.getPerspectiveTransform(input_pts,final_pts)
+done = cv2.warpPerspective(almostdone,Z, (1203, 802))
+
+cv2.imshow("yo", done)
+
 cv2.waitKey(0)
