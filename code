@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 img = cv2.imread("/Users/Ricky/OneDrive/Pictures/Saved Pictures/test_l3.jpg")
-original = img.copy()
+
 pt_D = [427, 214]
 pt_C = [520, 505]
 pt_B = [1006, 300]
@@ -48,6 +48,6 @@ almostdone = cv2.warpPerspective(out,X, (1203, 802))
 Z = cv2.getPerspectiveTransform(input_pts,final_pts)
 done = cv2.warpPerspective(almostdone,Z, (1203, 802))
 
-cv2.imshow("yo", done)
+cv2.imshow("window", done)
 
 cv2.waitKey(0)
