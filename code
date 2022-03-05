@@ -36,13 +36,13 @@ if detected_circles is not None:
      a, b, r = pt[0], pt[1], pt[2]
      cv2.circle(out, (a, b), r, (0, 255, 0), 2)
 
-inverseoutput = np.linalg.pinv(output_pts)
+
 pt1 = [1,802]
 pt2 = [1202, 802]
 pt3 = [1202, 1]
 pt4 = [0,0]
 final_pts = np.float32([pt4, pt3, pt2, pt1])
-inverseinput = np.linalg.pinv(input_pts)
+
 X = cv2.getPerspectiveTransform(output_pts,input_pts)
 almostdone = cv2.warpPerspective(out,X, (1203, 802))
 Z = cv2.getPerspectiveTransform(input_pts,final_pts)
